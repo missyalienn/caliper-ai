@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Project documentation and rules
+AGENTS.md
+
 # Python virtual environment
 venv/
 env/
