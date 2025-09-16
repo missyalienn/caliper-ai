@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def setup_chroma_collection(persist_directory: str = "./chroma_db") -> Tuple[Optional[chromadb.ClientAPI], Optional[chromadb.Collection]]:
+def setup_chroma_collection(persist_directory: str = "./chroma_db"):
     # Initialize ChromaDB client with persistent storage
     logger.info(f"Setting up ChromaDB collection in: {persist_directory}")
     
@@ -42,7 +42,7 @@ def setup_chroma_collection(persist_directory: str = "./chroma_db") -> Tuple[Opt
         return None, None
 
 
-def store_documents(collection: chromadb.Collection, documents: List[Dict[str, Any]]) -> bool:
+def store_documents(collection, documents: List[Dict[str, Any]]) -> bool:
     # Store documents in ChromaDB collection
     logger.info(f"Storing {len(documents)} documents in ChromaDB")
     
@@ -67,7 +67,7 @@ def store_documents(collection: chromadb.Collection, documents: List[Dict[str, A
         return False
 
 
-def verify_collection(collection: chromadb.Collection) -> bool:
+def verify_collection(collection) -> bool:
     # Verify documents were stored correctly
     logger.info("Verifying collection")
     

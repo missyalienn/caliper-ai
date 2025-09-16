@@ -18,40 +18,24 @@ logger = logging.getLogger(__name__)
 
 def load_diy_data(csv_path: str = "data/diy_snippets.csv") -> Optional[List[Dict[str, Any]]]:
     # Load and validate DIY snippets from CSV file
-    # Args: csv_path (str): Path to CSV file
-    # Returns: Optional[List[Dict]]: List of documents ready for ChromaDB
     logger.info(f"Loading DIY data from: {csv_path}")
     
-    # Validate file exists and is readable
+    # Check if file exists
     if not os.path.exists(csv_path):
         logger.error(f"CSV file not found: {csv_path}")
         return None
     
-    if not os.access(csv_path, os.R_OK):
-        logger.error(f"CSV file not readable: {csv_path}")
-        return None
-    
     try:
-        # Load CSV with error handling
+        # Load CSV
         df = pd.read_csv(csv_path)
         logger.info(f"Loaded {len(df)} DIY snippets")
         
-        # Validate required columns
+        # Basic validation - check required columns
         required_cols = ['id', 'category', 'snippet_text', 'tools_required', 'ppe_required']
         missing_cols = [col for col in required_cols if col not in df.columns]
         
         if missing_cols:
             logger.error(f"Missing required columns: {missing_cols}")
-            return None
-        
-        # Check for empty data
-        if df.empty:
-            logger.error("CSV file is empty")
-            return None
-        
-        # Validate data types and content
-        if df['id'].isnull().any():
-            logger.error("Found null values in ID column")
             return None
         
         # Prepare documents for ChromaDB
@@ -73,14 +57,8 @@ def load_diy_data(csv_path: str = "data/diy_snippets.csv") -> Optional[List[Dict
         
         return documents
         
-    except pd.errors.EmptyDataError:
-        logger.error("CSV file is empty or corrupted")
-        return None
-    except pd.errors.ParserError as e:
-        logger.error(f"CSV parsing error: {e}")
-        return None
     except Exception as e:
-        logger.error(f"Unexpected error loading CSV: {e}")
+        logger.error(f"Error loading CSV: {e}")
         return None
 
 

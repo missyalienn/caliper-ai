@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""
+Embedding Generation Script for Caliper-AI Prototype
+
+Generates vector embeddings for DIY snippets using mock OpenAI API.
+"""
+
+import os
+import sys
+import logging
+import numpy as np
+from typing import List, Dict, Any, Optional
+from ingest_data import load_diy_data
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+
+def generate_mock_embeddings(texts: List[str]) -> List[List[float]]:
+    # Generate random 1536-dim vectors (OpenAI's ada-002 format)
+    embeddings = []
+    for text in texts:
+        # Create random vector with same dimensions as OpenAI
+        embedding = np.random.normal(0, 1, 1536).tolist()
+        embeddings.append(embedding)
+    return embeddings
+
+
+def generate_embeddings_for_documents(documents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    # Generate embeddings for all documents
+    logger.info(f"Generating embeddings for {len(documents)} documents")
+    
+    try:
+        # Extract texts
+        texts = [doc['text'] for doc in documents]
+        
+        # Generate mock embeddings
+        embeddings = generate_mock_embeddings(texts)
+        
+        # Add embeddings to documents
+        for i, doc in enumerate(documents):
+            doc['embedding'] = embeddings[i]
+        
+        logger.info(f"Successfully generated {len(documents)} embeddings")
+        return documents
+        
+    except Exception as e:
+        logger.error(f"Error generating embeddings: {e}")
+        return []
+
+
+def store_embeddings_in_chroma(documents_with_embeddings: List[Dict[str, Any]]) -> bool:
+    # Store documents with embeddings in ChromaDB
+    logger.info("Storing embeddings in ChromaDB")
+    
+    try:
+        import chromadb
+        
+        # Get existing collection
+        client = chromadb.PersistentClient(path="./chroma_db")
+        collection = client.get_collection(name="diy_snippets")
+        
+        # Extract data
+        ids = [doc['id'] for doc in documents_with_embeddings]
+        texts = [doc['text'] for doc in documents_with_embeddings]
+        metadatas = [doc['metadata'] for doc in documents_with_embeddings]
+        embeddings = [doc['embedding'] for doc in documents_with_embeddings]
+        
+        # Update collection with embeddings
+        collection.update(
+            ids=ids,
+            documents=texts,
+            metadatas=metadatas,
+            embeddings=embeddings
+        )
+        
+        logger.info(f"Successfully stored {len(documents_with_embeddings)} embeddings")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Error storing embeddings: {e}")
+        return False
+
+
+def main() -> bool:
+    # Main function to generate and store embeddings
+    csv_path = sys.argv[1] if len(sys.argv) > 1 else "data/diy_snippets.csv"
+    
+    logger.info("Starting embedding generation")
+    
+    # Load documents
+    documents = load_diy_data(csv_path)
+    if not documents:
+        logger.error("Failed to load documents")
+        return False
+    
+    # Generate embeddings
+    documents_with_embeddings = generate_embeddings_for_documents(documents)
+    if not documents_with_embeddings:
+        logger.error("Failed to generate embeddings")
+        return False
+    
+    # Store embeddings
+    if not store_embeddings_in_chroma(documents_with_embeddings):
+        logger.error("Failed to store embeddings")
+        return False
+    
+    logger.info("Embedding generation completed successfully")
+    return True
+
+
+if __name__ == "__main__":
+    success = main()
+    sys.exit(0 if success else 1)
