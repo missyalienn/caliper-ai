@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def generate_query_embedding(query: str) -> List[float]:
     # Generate mock embedding for user query (same format as stored embeddings)
-    embedding = np.random.normal(0, 1, 1536).tolist()
+    embedding = np.random.normal(0, 1, 384).tolist()
     return embedding
 
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-CSV Data Ingestion Script for Caliper-AI Prototype
-
+CSV Data Ingestion Script for Caliper AI prototype. 
 Simple script to load DIY snippets from CSV and prepare for ChromaDB.
 """
 
@@ -35,19 +34,18 @@ def load_diy_data(csv_path: str = "data/diy_snippets.csv") -> Optional[List[Dict
         missing_cols = [col for col in required_cols if col not in df.columns]
         
         if missing_cols:
-            logger.error(f"Missing required columns: {missing_cols}")
-            return None
+            raise ValueError(f"Missing required columns: {missing_cols}")
         
         # Prepare documents for ChromaDB
         documents = []
         for _, row in df.iterrows():
             doc = {
-                'id': str(row['id']),
-                'text': str(row['snippet_text']),
+                'id': str(row['id']),  # Convert ID to string for ChromaDB
+                'text': row['snippet_text'],
                 'metadata': {
-                    'category': str(row['category']),
-                    'tools_required': str(row['tools_required']),
-                    'ppe_required': str(row['ppe_required'])
+                    'category': row['category'],
+                    'tools_required': row['tools_required'],
+                    'ppe_required': row['ppe_required']
                 }
             }
             documents.append(doc)

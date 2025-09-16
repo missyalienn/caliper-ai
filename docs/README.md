@@ -20,8 +20,8 @@ This directory contains technical documentation for the Caliper-AI prototype pro
 ### Key Scripts
 - `scripts/ingest_data.py` - Load CSV data
 - `scripts/setup_chroma.py` - Initialize ChromaDB
-- `scripts/generate_embeddings.py` - Create embeddings (coming soon)
-- `scripts/query_system.py` - RAG queries (coming soon)
+- `scripts/generate_embeddings.py` - Create embeddings 
+- `scripts/query_system.py` - RAG queries 
 
 ### Data Structure
 - `data/diy_snippets.csv` - DIY Q&As with metadata

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 ChromaDB Setup Script for Caliper-AI Prototype
-
 Simple script to initialize ChromaDB collection and store DIY snippets.
 """
 
@@ -23,7 +22,7 @@ def setup_chroma_collection(persist_directory: str = "./chroma_db"):
     
     try:
         # Create ChromaDB client
-        client = chromadb.PersistentClient(path=persist_directory)
+        client = chromadb.EphemeralClient()
         logger.info("ChromaDB client initialized")
         
         # Create or get collection

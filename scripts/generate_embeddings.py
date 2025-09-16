@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Embedding Generation Script for Caliper-AI Prototype
-
 Generates vector embeddings for DIY snippets using mock OpenAI API.
 """
 
@@ -18,11 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 def generate_mock_embeddings(texts: List[str]) -> List[List[float]]:
-    # Generate random 1536-dim vectors (OpenAI's ada-002 format)
+    # Generate random 384-dim vectors (sentence-transformers format)
     embeddings = []
     for text in texts:
-        # Create random vector with same dimensions as OpenAI
-        embedding = np.random.normal(0, 1, 1536).tolist()
+        # Create random vector with 384 dimensions
+        embedding = np.random.normal(0, 1, 384).tolist()
         embeddings.append(embedding)
     return embeddings
 
@@ -57,9 +56,13 @@ def store_embeddings_in_chroma(documents_with_embeddings: List[Dict[str, Any]]) 
     try:
         import chromadb
         
-        # Get existing collection
-        client = chromadb.PersistentClient(path="./chroma_db")
-        collection = client.get_collection(name="diy_snippets")
+        # Use EphemeralClient instead of PersistentClient
+        client = chromadb.EphemeralClient()
+        
+        # Get or create collection
+        collection_name = "diy_snippets"
+        collection = client.get_or_create_collection(name=collection_name)
+        logger.info(f"Using collection: {collection_name}")
         
         # Extract data
         ids = [doc['id'] for doc in documents_with_embeddings]
@@ -67,8 +70,8 @@ def store_embeddings_in_chroma(documents_with_embeddings: List[Dict[str, Any]]) 
         metadatas = [doc['metadata'] for doc in documents_with_embeddings]
         embeddings = [doc['embedding'] for doc in documents_with_embeddings]
         
-        # Update collection with embeddings
-        collection.update(
+        # Add documents with embeddings to collection
+        collection.add(
             ids=ids,
             documents=texts,
             metadatas=metadatas,
