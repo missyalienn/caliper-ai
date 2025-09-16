@@ -57,4 +57,63 @@ caliper-ai/
 
 ## Getting Started
 
-*Setup instructions and usage examples will be added as the prototype develops.*
+### 1. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Prepare Data
+- Edit or add your DIY snippets in `data/diy_snippets.csv`
+
+### 3. Run the End-to-End Demo
+
+```bash
+python scripts/demo.py
+```
+- This will load data, set up ChromaDB, generate embeddings, and run sample queries.
+
+### 4. Try Interactive Semantic Search
+
+```bash
+python scripts/query_system.py
+```
+- Enter your own DIY questions and see relevant results.
+
+### 5. Explore in Jupyter Notebook
+
+```bash
+jupyter notebook notebooks/demo.ipynb
+```
+- Run each cell to see the pipeline step by step.
+
+---
+
+## Usage Examples
+
+### Run the Demo Script
+```bash
+python scripts/demo.py
+```
+
+### Run a Query from the Command Line
+```bash
+python scripts/query_system.py "how to fix a leaky faucet"
+```
+
+### Run the Notebook
+```bash
+jupyter notebook notebooks/demo.ipynb
+```
+
+---
+
+## Architecture Overview
+- **Data Ingestion**: `scripts/ingest_data.py`
+- **ChromaDB Setup**: `scripts/setup_chroma.py`
+- **Embedding Generation**: `scripts/generate_embeddings.py`
+- **RAG Query System**: `scripts/query_system.py`
+- **Demo Script**: `scripts/demo.py`
+- **Demo Notebook**: `notebooks/demo.ipynb`
+
+---
