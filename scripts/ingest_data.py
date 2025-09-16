@@ -8,33 +8,53 @@ Simple script to load DIY snippets from CSV and prepare for ChromaDB.
 import pandas as pd
 import os
 import sys
+from typing import List, Dict, Any, Optional
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
-def load_diy_data(csv_path="data/diy_snippets.csv"):
+def load_diy_data(csv_path: str = "data/diy_snippets.csv") -> Optional[List[Dict[str, Any]]]:
     # Load and validate DIY snippets from CSV file
     # Args: csv_path (str): Path to CSV file
-    # Returns: list: List of documents ready for ChromaDB
-    print(f"Loading DIY data from: {csv_path}")
+    # Returns: Optional[List[Dict]]: List of documents ready for ChromaDB
+    logger.info(f"Loading DIY data from: {csv_path}")
     
-    # Check if file exists
+    # Validate file exists and is readable
     if not os.path.exists(csv_path):
-        print(f"Error: CSV file not found: {csv_path}")
+        logger.error(f"CSV file not found: {csv_path}")
+        return None
+    
+    if not os.access(csv_path, os.R_OK):
+        logger.error(f"CSV file not readable: {csv_path}")
         return None
     
     try:
-        # Load CSV
+        # Load CSV with error handling
         df = pd.read_csv(csv_path)
-        print(f"✓ Loaded {len(df)} DIY snippets")
+        logger.info(f"Loaded {len(df)} DIY snippets")
         
-        # Basic validation
+        # Validate required columns
         required_cols = ['id', 'category', 'snippet_text', 'tools_required', 'ppe_required']
         missing_cols = [col for col in required_cols if col not in df.columns]
         
         if missing_cols:
-            print(f"Error: Missing columns: {missing_cols}")
+            logger.error(f"Missing required columns: {missing_cols}")
             return None
         
-        # Prepare data for ChromaDB
+        # Check for empty data
+        if df.empty:
+            logger.error("CSV file is empty")
+            return None
+        
+        # Validate data types and content
+        if df['id'].isnull().any():
+            logger.error("Found null values in ID column")
+            return None
+        
+        # Prepare documents for ChromaDB
         documents = []
         for _, row in df.iterrows():
             doc = {
@@ -48,27 +68,34 @@ def load_diy_data(csv_path="data/diy_snippets.csv"):
             }
             documents.append(doc)
         
-        print(f"✓ Prepared {len(documents)} documents for ChromaDB")
-        print(f"✓ Categories: {df['category'].unique().tolist()}")
+        logger.info(f"Prepared {len(documents)} documents for ChromaDB")
+        logger.info(f"Categories: {df['category'].unique().tolist()}")
         
         return documents
         
+    except pd.errors.EmptyDataError:
+        logger.error("CSV file is empty or corrupted")
+        return None
+    except pd.errors.ParserError as e:
+        logger.error(f"CSV parsing error: {e}")
+        return None
     except Exception as e:
-        print(f"Error loading CSV: {e}")
+        logger.error(f"Unexpected error loading CSV: {e}")
         return None
 
 
-def main():
+def main() -> bool:
     # Main function to run CSV ingestion
     csv_path = sys.argv[1] if len(sys.argv) > 1 else "data/diy_snippets.csv"
     
+    logger.info("Starting CSV data ingestion")
     documents = load_diy_data(csv_path)
     
     if documents:
-        print("✓ Data ingestion successful!")
+        logger.info("Data ingestion completed successfully")
         return True
     else:
-        print("✗ Data ingestion failed!")
+        logger.error("Data ingestion failed")
         return False
 
 
