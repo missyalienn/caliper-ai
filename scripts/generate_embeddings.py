@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
 """
 Embedding Generation Script for Caliper-AI Prototype
-Generates vector embeddings for DIY snippets using mock OpenAI API.
+Generates vector embeddings for DIY snippets using local sentence-transformers.
 """
 
 import os
 import sys
 import logging
-import numpy as np
 from typing import List, Dict, Any, Optional
 from ingest_data import load_diy_data
+from local_embeddings import generate_batch_embeddings
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-def generate_mock_embeddings(texts: List[str]) -> List[List[float]]:
-    # Generate random 384-dim vectors (sentence-transformers format)
-    embeddings = []
-    for text in texts:
-        # Create random vector with 384 dimensions
-        embedding = np.random.normal(0, 1, 384).tolist()
-        embeddings.append(embedding)
-    return embeddings
+def generate_embeddings(texts: List[str]) -> List[List[float]]:
+    # Generate semantic embeddings using local sentence-transformers
+    return generate_batch_embeddings(texts)
 
 
 def generate_embeddings_for_documents(documents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -34,8 +29,8 @@ def generate_embeddings_for_documents(documents: List[Dict[str, Any]]) -> List[D
         # Extract texts
         texts = [doc['text'] for doc in documents]
         
-        # Generate mock embeddings
-        embeddings = generate_mock_embeddings(texts)
+        # Generate semantic embeddings
+        embeddings = generate_embeddings(texts)
         
         # Add embeddings to documents
         for i, doc in enumerate(documents):

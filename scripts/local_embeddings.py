@@ -110,3 +110,40 @@ def get_model_info() -> dict:
         "embedding_dimension": model.get_sentence_embedding_dimension(),
         "max_seq_length": model.max_seq_length
     }
+
+
+def main():
+    # Test the local embedding service
+    logger.info("Testing local embedding service")
+    
+    # Test model loading
+    info = get_model_info()
+    logger.info(f"Model info: {info}")
+    
+    if info["status"] == "loaded":
+        # Test single embedding
+        test_text = "How to install floating shelves safely?"
+        embedding = generate_text_embedding(test_text)
+        if embedding:
+            logger.info(f"Single embedding test: {len(embedding)} dimensions")
+        else:
+            logger.error("Single embedding test failed")
+        
+        # Test batch embeddings
+        test_texts = [
+            "How to fix a leaky faucet?",
+            "What tools do I need for painting?",
+            "Safety equipment for woodworking"
+        ]
+        batch_embeddings = generate_batch_embeddings(test_texts)
+        if batch_embeddings:
+            logger.info(f"Batch embedding test: {len(batch_embeddings)} embeddings generated")
+        else:
+            logger.error("Batch embedding test failed")
+    else:
+        logger.error("Model failed to load")
+
+
+if __name__ == "__main__":
+    main()
+
