@@ -8,18 +8,17 @@ Simple query system that finds relevant DIY snippets using semantic search.
 import os
 import sys
 import logging
-import numpy as np
 from typing import List, Dict, Any, Optional
+from local_embeddings import generate_text_embedding
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-def generate_query_embedding(query: str) -> List[float]:
-    # Generate mock embedding for user query (same format as stored embeddings)
-    embedding = np.random.normal(0, 1, 384).tolist()
-    return embedding
+def generate_query_embedding(query: str) -> Optional[List[float]]:
+    # Generate semantic embedding for user query using local sentence-transformers
+    return generate_text_embedding(query)
 
 
 def search_chroma(query: str, top_k: int = 3) -> List[Dict[str, Any]]:
@@ -30,11 +29,14 @@ def search_chroma(query: str, top_k: int = 3) -> List[Dict[str, Any]]:
         import chromadb
         
         # Get ChromaDB collection
-        client = chromadb.PersistentClient(path="./chroma_db")
+        client = chromadb.EphemeralClient()
         collection = client.get_collection(name="diy_snippets")
         
         # Generate query embedding
         query_embedding = generate_query_embedding(query)
+        if query_embedding is None:
+            logger.error("Failed to generate query embedding")
+            return []
         
         # Search for similar documents
         results = collection.query(
