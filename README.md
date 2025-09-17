@@ -2,15 +2,13 @@
 
 ## 🎯 Vision
 
-**Caliper: Your AI assistant for DIY — build with confidence.**
+**Caliper turns DIY overwhelm into confident action.**
 
-Caliper helps beginner DIYers cut through information overload with clear, practical steps — so they can start and finish projects confidently.
-
-**In short: Caliper turns overwhelm into action.**
+Your AI assistant for DIY that cuts through information overload with practical steps — so you can build with confidence.
 
 ## ⚙️ What It Does
 
-Caliper-AI is a prototype that helps beginners with DIY projects by providing practical, safe guidance and reducing decision fatigue.
+Caliper answers your DIY questions with step-by-step instructions, essential tools, and safety tips.
 
 ### Current Functionality
 - **Data Ingestion**: Loads DIY project snippets with categories, tools, and safety equipment
