@@ -2,15 +2,15 @@
 
 ## System Overview
 
-Caliper-AI is a prototype AI companion for beginner DIY projects. The system ingests DIY project data from CSV files, generates embeddings, stores them in ChromaDB, and uses retrieval-augmented generation (RAG) to provide relevant project instructions along with metadata such as category, required tools, and safety equipment.
+Caliper-AI is an AI companion for beginner DIY projects. The system ingests DIY project data from local data sources, generates embeddings using sentence transformers, stores them in ChromaDB, and uses retrieval-augmented generation (RAG) to provide relevant project instructions along with metadata such as category, required tools, and safety equipment.
 
 
 ## Architecture
 
 ### Core Components
-- **Data Pipeline**: CSV ingestion and validation
+- **Data Pipeline**: Data ingestion and validation
 - **Vector Database**: ChromaDB for semantic search
-- **Embedding System**: 384-dimension mock embeddings
+- **Embedding System**: Sentence transformers for semantic embeddings
 - **Query Interface**: RAG-based question answering
 - **Demo System**: End-to-end workflow demonstration
 
@@ -21,7 +21,7 @@ Caliper-AI is a prototype AI companion for beginner DIY projects. The system ing
 - **`scripts/setup_chroma.py`**: Initializes ChromaDB collection using EphemeralClient, stores documents with metadata
 
 ### Embedding Pipeline
-- **`scripts/generate_embeddings.py`**: Generates 384-dimension mock embeddings, stores in ChromaDB using EphemeralClient and get_or_create_collection()
+- **`scripts/generate_embeddings.py`**: Generates embeddings using sentence transformers, stores in ChromaDB using EphemeralClient and get_or_create_collection()
 - **`scripts/query_system.py`**: Handles user queries, generates query embeddings, performs semantic search
 
 ### Demo and Testing
@@ -30,7 +30,7 @@ Caliper-AI is a prototype AI companion for beginner DIY projects. The system ing
 
 ## Data Structure
 
-### CSV Format (`data/diy_snippets.csv`)
+### Data Format (`data/diy_snippets.csv`)
 ```csv
 id,category,snippet_text,tools_required,ppe_required
 ```
@@ -57,10 +57,11 @@ id,category,snippet_text,tools_required,ppe_required
 
 ## Embedding Configuration
 
-### Dimensions
-- **Storage Embeddings**: 384 dimensions (sentence-transformers format)
-- **Query Embeddings**: 384 dimensions (matching storage)
-- **Generation Method**: Mock random vectors using numpy
+### Embedding Model
+- **Model**: sentence-transformers
+- **Storage Embeddings**: Generated using sentence transformers
+- **Query Embeddings**: Generated using same sentence transformers model
+- **Generation Method**: Real semantic embeddings from sentence transformers
 
 ### ChromaDB Configuration
 - **Client Type**: EphemeralClient (in-memory)
@@ -73,7 +74,7 @@ id,category,snippet_text,tools_required,ppe_required
 ```bash
 python scripts/ingest_data.py [csv_path]
 ```
-- Loads CSV data
+- Loads data from local source
 - Validates required columns
 - Converts numeric IDs to strings
 - Prepares documents for ChromaDB
@@ -91,7 +92,7 @@ python scripts/setup_chroma.py [csv_path]
 ```bash
 python scripts/generate_embeddings.py [csv_path]
 ```
-- Generates 384-dim mock embeddings
+- Generates embeddings using sentence transformers
 - Stores embeddings in ChromaDB
 - Uses EphemeralClient for consistency
 
@@ -128,19 +129,20 @@ Step-by-step interactive exploration of each pipeline component
 
 ### Dependencies
 - **chromadb**: Vector database operations
-- **pandas**: CSV data processing
-- **numpy**: Embedding generation
+- **pandas**: Data processing
+- **sentence-transformers**: Embedding generation
+- **torch**: Deep learning framework for sentence transformers
 - **logging**: System logging and debugging
 
 ### Error Handling
-- CSV validation with required column checking
+- Data validation with required column checking
 - ChromaDB collection existence handling
-- Embedding dimension consistency validation
+- Embedding model consistency validation
 - Comprehensive logging throughout pipeline
 
 ### Performance Notes
-- Uses EphemeralClient for fast prototyping
-- Mock embeddings for demo purposes
+- Uses EphemeralClient for fast development
+- Real sentence transformer embeddings for semantic search
 - In-memory storage for quick testing
 - Modular script architecture for easy modification
 
@@ -159,10 +161,9 @@ Step-by-step interactive exploration of each pipeline component
 ## Development Notes
 
 ### Current State
-This is a prototype system using mock embeddings rather than real AI calls currently. The architecture demonstrates the core RAG pipeline for a DIY companion.
+This system uses sentence transformers for real semantic embeddings. The architecture provides a complete RAG pipeline for a DIY companion.
 
 ### Future Enhancements
-- Real embedding models (OpenAI, Hugging Face)
-- Persistent ChromaDB storage
-- API integration for live queries
-- Enhanced safety and tool recommendation features
+- Next iteration: rewrite using modern AI stack (LangChain, LlamaIndex, Pinecone)
+- Ingest live data from external APIs for real-time context
+- Note: This rewrite will occur in a separate repository to be linked here. 
