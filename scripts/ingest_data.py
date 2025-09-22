@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CSV Data Ingestion Script for Caliper AI prototype. 
+CSV Data Ingestion Script for Caliper AI. 
 Simple script to load DIY snippets from CSV and prepare for ChromaDB.
 """
 

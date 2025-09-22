@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Embedding Generation Script for Caliper-AI Prototype
+Embedding Generation Script for Caliper-AI
 Generates vector embeddings for DIY snippets using local sentence-transformers.
 """
 

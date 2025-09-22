@@ -26,7 +26,6 @@ Caliper-AI is an AI companion for beginner DIY projects. The system ingests DIY 
 
 ### Demo and Testing
 - **`scripts/demo.py`**: Complete end-to-end demonstration script
-- **`notebooks/demo.ipynb`**: Interactive Jupyter notebook for step-by-step exploration
 
 ## Data Structure
 
@@ -119,11 +118,6 @@ python scripts/query_system.py "how to install floating shelves"
 ```
 Test specific DIY questions and see semantic search results
 
-### Jupyter Notebook Exploration
-```bash
-jupyter notebook notebooks/demo.ipynb
-```
-Step-by-step interactive exploration of each pipeline component
 
 ## Technical Specifications
 
