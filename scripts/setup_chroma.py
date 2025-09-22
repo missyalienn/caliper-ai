@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ChromaDB Setup Script for Caliper-AI Prototype
+ChromaDB Setup Script for Caliper-AI 
 Simple script to initialize ChromaDB collection and store DIY snippets.
 """
 
@@ -11,8 +11,9 @@ import logging
 from typing import Optional, Tuple, List, Dict, Any
 from ingest_data import load_diy_data
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging based on environment variable
+log_level = logging.DEBUG if os.getenv('DEBUG') else logging.WARNING
+logging.basicConfig(level=log_level, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 

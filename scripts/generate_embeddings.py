@@ -11,8 +11,9 @@ from typing import List, Dict, Any, Optional
 from ingest_data import load_diy_data
 from local_embeddings import generate_batch_embeddings
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging based on environment variable
+log_level = logging.DEBUG if os.getenv('DEBUG') else logging.WARNING
+logging.basicConfig(level=log_level, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 

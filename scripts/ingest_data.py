@@ -10,8 +10,9 @@ import sys
 from typing import List, Dict, Any, Optional
 import logging
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging based on environment variable
+log_level = logging.DEBUG if os.getenv('DEBUG') else logging.WARNING
+logging.basicConfig(level=log_level, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 

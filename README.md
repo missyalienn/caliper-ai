@@ -15,7 +15,7 @@ Caliper answers your DIY questions with step-by-step instructions, essential too
 - **Semantic Search**: Uses sentence-transformers embeddings to find relevant guidance
 - **RAG Pipeline**: Retrieves relevant snippets and composes step-by-step, context-aware answers
 - **Categories**: Home Decor, Painting, Refinishing, Woodworking, Lighting, Tools, Plumbing
-
+  
 ## 🛠️ Tech Stack
 
 - **ChromaDB**: In-memory vector storage and similarity search

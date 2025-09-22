@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RAG Query System for Caliper-AI Prototype
+RAG Query System for Caliper-AI
 
 Simple query system that finds relevant DIY snippets using semantic search.
 """
@@ -11,8 +11,9 @@ import logging
 from typing import List, Dict, Any, Optional
 from local_embeddings import generate_text_embedding
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging based on environment variable
+log_level = logging.DEBUG if os.getenv('DEBUG') else logging.WARNING
+logging.basicConfig(level=log_level, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 

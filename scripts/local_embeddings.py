@@ -6,11 +6,13 @@ Provides sentence-transformer based embeddings without API calls.
 
 import logging
 import numpy as np
+import os
 from typing import List, Optional
 from sentence_transformers import SentenceTransformer
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging based on environment variable
+log_level = logging.DEBUG if os.getenv('DEBUG') else logging.WARNING
+logging.basicConfig(level=log_level, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # Global model instance for caching
@@ -76,7 +78,7 @@ def generate_batch_embeddings(texts: List[str]) -> List[List[float]]:
         logger.info(f"Generating embeddings for {len(texts)} texts")
         
         # Generate batch embeddings
-        embeddings = model.encode(texts, convert_to_tensor=False, show_progress_bar=True)
+        embeddings = model.encode(texts, convert_to_tensor=False, show_progress_bar=False)
         
         # Convert to list of lists
         embeddings_list = [embedding.tolist() for embedding in embeddings]
